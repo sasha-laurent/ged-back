@@ -2,63 +2,103 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\OpenApi\Model\RequestBody;
+use ApiPlatform\OpenApi\Model\Schema;
+use App\Controller\CreateDocument;
+use App\Repository\DocumentRepository;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: DocumentRepository::class)]
+#[ApiResource(operations: [
+    new Get(),
+    new GetCollection(),
+    new Post(
+        controller: CreateDocument::class,
+        openapiContext: [
+            'requestBody' => [
+                'content' => [
+                    'multipart/form-data' => [
+                        'schema' => [
+                            'type' => 'object',
+                            'properties' => [
+                                'name' => [
+                                    'type' => 'string'
+                                ],
+                                'authorId' => [
+                                    'type' => 'int'
+                                ],
+                                'file' => [
+                                    'type' => 'string',
+                                    'format' => 'binary'
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ],
+        deserialize: false
+    )
+])]
 class Document
 {
-    private string $name;
-    private string $path;
-    private User $author;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
 
-    /**
-     * @return string
-     */
-    public function getName(): string
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $path = null;
+
+    #[ORM\ManyToOne(inversedBy: 'documents')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $author = null;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     * @return Document
-     */
-    public function setName(string $name): Document
+    public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getPath(): string
+    public function getPath(): ?string
     {
         return $this->path;
     }
 
-    /**
-     * @param string $path
-     * @return Document
-     */
-    public function setPath(string $path): Document
+    public function setPath(string $path): self
     {
         $this->path = $path;
+
         return $this;
     }
 
-    /**
-     * @return User
-     */
-    public function getAuthor(): User
+    public function getAuthor(): ?User
     {
         return $this->author;
     }
 
-    /**
-     * @param User $author
-     * @return Document
-     */
-    public function setAuthor(User $author): Document
+    public function setAuthor(?User $author): self
     {
         $this->author = $author;
+
         return $this;
     }
 }
