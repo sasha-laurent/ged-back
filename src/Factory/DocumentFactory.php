@@ -4,7 +4,6 @@ namespace App\Factory;
 
 use App\Entity\Document;
 use App\Entity\User;
-use PhpParser\Comment\Doc;
 
 class DocumentFactory
 {

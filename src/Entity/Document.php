@@ -3,11 +3,8 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
-use ApiPlatform\OpenApi\Model\RequestBody;
-use ApiPlatform\OpenApi\Model\Schema;
 use App\Controller\CreateDocument;
 use App\Repository\DocumentRepository;
 use App\State\DocumentProvider;

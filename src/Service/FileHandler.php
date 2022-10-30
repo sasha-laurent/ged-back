@@ -20,7 +20,7 @@ class FileHandler
 
     public function upload(UploadedFile $file)
     {
-        // todo : clean file name, make it unique,
+        // todo : clean file name, make it unique ...
         $file->move($this->publicPath.'/'.self::UPLOADS_DIRECTORY_NAME, $file->getClientOriginalName());
     }
 

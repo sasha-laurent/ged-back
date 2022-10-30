@@ -3,14 +3,23 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use App\Repository\DocumentRepository;
+use ApiPlatform\Metadata\Post;
+use App\State\UserProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity]
-#[ApiResource]
-class User
+#[ApiResource(
+    operations: [
+        new Post(
+            processor: UserProcessor::class
+        )
+    ]
+)]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -18,7 +27,10 @@ class User
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $login = null;
+    private ?string $username = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $password = null;
 
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Document::class)]
     private Collection $documents;
@@ -33,14 +45,26 @@ class User
         return $this->id;
     }
 
-    public function getLogin(): ?string
+    public function getUsername(): ?string
     {
-        return $this->login;
+        return $this->username;
     }
 
-    public function setLogin(?string $login): self
+    public function setUsername(?string $username): self
     {
-        $this->login = $login;
+        $this->username = $username;
+
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(?string $password): self
+    {
+        $this->password = $password;
 
         return $this;
     }
@@ -70,5 +94,21 @@ class User
         }
 
         return $this;
+    }
+
+    public function getRoles(): array
+    {
+        // todo: implement roles
+        return [];
+    }
+
+    public function eraseCredentials()
+    {
+        // todo: implement
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->getUsername();
     }
 }
