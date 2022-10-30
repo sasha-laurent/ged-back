@@ -10,40 +10,43 @@ use ApiPlatform\OpenApi\Model\RequestBody;
 use ApiPlatform\OpenApi\Model\Schema;
 use App\Controller\CreateDocument;
 use App\Repository\DocumentRepository;
+use App\State\DocumentProvider;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DocumentRepository::class)]
-#[ApiResource(operations: [
-    new Get(),
-    new GetCollection(),
-    new Post(
-        controller: CreateDocument::class,
-        openapiContext: [
-            'requestBody' => [
-                'content' => [
-                    'multipart/form-data' => [
-                        'schema' => [
-                            'type' => 'object',
-                            'properties' => [
-                                'name' => [
-                                    'type' => 'string'
-                                ],
-                                'authorId' => [
-                                    'type' => 'int'
-                                ],
-                                'file' => [
-                                    'type' => 'string',
-                                    'format' => 'binary'
+#[ApiResource(
+    operations: [
+        new GetCollection(),
+        new Post(
+            controller: CreateDocument::class,
+            openapiContext: [
+                'requestBody' => [
+                    'content' => [
+                        'multipart/form-data' => [
+                            'schema' => [
+                                'type' => 'object',
+                                'properties' => [
+                                    'name' => [
+                                        'type' => 'string'
+                                    ],
+                                    'authorId' => [
+                                        'type' => 'int'
+                                    ],
+                                    'file' => [
+                                        'type' => 'string',
+                                        'format' => 'binary'
+                                    ]
                                 ]
                             ]
                         ]
                     ]
                 ]
-            ]
-        ],
-        deserialize: false
-    )
-])]
+            ],
+            deserialize: false
+        )
+    ],
+    provider: DocumentProvider::class
+)]
 class Document
 {
     #[ORM\Id]

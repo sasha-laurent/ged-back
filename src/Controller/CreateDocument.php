@@ -22,7 +22,7 @@ class CreateDocument extends AbstractController
 
         return DocumentFactory::create(
             $request->get('name'),
-            $fileHandler->getFilePath($file),
+            $file->getClientOriginalName(),
             $userRepository->find($request->get('authorId'))
         );
     }

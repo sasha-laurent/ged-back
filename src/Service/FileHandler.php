@@ -3,27 +3,29 @@
 namespace App\Service;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\UrlHelper;
 
 class FileHandler
 {
-    private string $uploadPath;
+    const UPLOADS_DIRECTORY_NAME = 'uploads';
 
-    public function __construct(string $uploadPath)
+    private string $publicPath;
+    private UrlHelper $urlHelper;
+
+    public function __construct(string $publicPath, UrlHelper $urlHelper)
     {
-        $this->uploadPath = $uploadPath;
+        $this->publicPath = $publicPath;
+        $this->urlHelper = $urlHelper;
     }
 
     public function upload(UploadedFile $file)
     {
         // todo : clean file name, make it unique,
-
-        $file->move($this->uploadPath, $file->getClientOriginalName());
+        $file->move($this->publicPath.'/'.self::UPLOADS_DIRECTORY_NAME, $file->getClientOriginalName());
     }
 
-    public function getFilePath(UploadedFile $file)
+    public function getFilePath(string $fileName)
     {
-        // todo : return url instead of path
-
-        return $this->uploadPath.'/'.$file->getClientOriginalName();
+        return $this->urlHelper->getAbsoluteUrl('/'.self::UPLOADS_DIRECTORY_NAME.'/'.$fileName);
     }
 }
