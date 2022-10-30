@@ -45,7 +45,7 @@ class Authenticator
 
     public function getAuthenticatedToken(): AuthToken|null
     {
-        $token = $this->requestStack->getCurrentRequest()->headers->get('Authorization');
+        $token = $this->requestStack->getCurrentRequest()->headers->get('X-Custom-Auth');
 
         if (!$token) {
             return null;
